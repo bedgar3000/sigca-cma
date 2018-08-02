@@ -509,6 +509,20 @@ function printValoresGeneral($tabla, $codigo) {
 			$c[] = "AN"; $v[] = "Anulado";
 			$c[] = "CT"; $v[] = "Castigado";
 			break;
+			
+		case "adelanto-estado":
+			$c[] = "PR"; $v[] = "En Preparación";
+			$c[] = "AP"; $v[] = "Aprobado";
+			$c[] = "GE"; $v[] = "Generado";
+			$c[] = "PA"; $v[] = "Pagado";
+			$c[] = "AC"; $v[] = "Aplicado";
+			$c[] = "AN"; $v[] = "Anulado";
+			break;
+			
+		case "adelanto-tipo":
+			$c[] = "P"; $v[] = "Proveedor";
+			$c[] = "C"; $v[] = "Contratista";
+			break;
 	}
 
 	$i=0;
@@ -1566,13 +1580,12 @@ function getPartidaCuentaFromIGV($CodImpuesto) {
 }
 
 //	funcion para obtener el codigo del presupuesto por l año
-function setPresupuesto($Organismo, $EjercicioPpto, $CategoriaProg) {
+function setPresupuesto($Organismo, $EjercicioPpto) {
 	$sql = "SELECT CodPresupuesto
 			FROM pv_presupuesto
 			WHERE
-				CodOrganismo = '$Organismo'
-				AND Ejercicio = '$EjercicioPpto'
-				AND CategoriaProg = '$CategoriaProg'";
+				Organismo = '".$Organismo."' AND
+				EjercicioPpto = '".$EjercicioPpto."'";
 	$query_presupuesto = mysql_query($sql) or die(getErrorSql(mysql_errno(), mysql_error(), $sql));
 	if (mysql_num_rows($query_presupuesto)) $field_presupuesto = mysql_fetch_array($query_presupuesto);
 	echo $field_presupuesto['CodPresupuesto'];
