@@ -213,20 +213,27 @@ if ($modulo == "formulario") {
 		execute($sql);
 		##	detalle
 		for ($i=0; $i < count($cod_partida); $i++) {
-			if (setNumero($MontoAprobadoDet[$i])) {
+			if (setNumero($MontoAprobadoDet[$i]) > 0) {
 				if ($FlagAnexa[$i] == 'S')
-					$sql = "INSERT INTO pv_proyectopresupuestodet
-							SET
-								CodOrganismo = '".$CodOrganismo."',
-								CodProyPresupuesto = '".$CodProyPresupuesto."',
-								CodFuente = '".$CodFuente[$i]."',
-								cod_partida = '".$cod_partida[$i]."',
-								MontoAprobado = '".setNumero($MontoAprobadoDet[$i])."',
-								FlagAnexa = '".$FlagAnexa[$i]."',
-								Estado = 'AP',
-								UltimoUsuario = '".$_SESSION["USUARIO_ACTUAL"]."',
-								UltimaFecha = NOW()";
+				{
+					if (setNumero($MontoAprobadoDet[$i]) > 0)
+					{
+						$sql = "INSERT INTO pv_proyectopresupuestodet
+								SET
+									CodOrganismo = '".$CodOrganismo."',
+									CodProyPresupuesto = '".$CodProyPresupuesto."',
+									CodFuente = '".$CodFuente[$i]."',
+									cod_partida = '".$cod_partida[$i]."',
+									MontoAprobado = '".setNumero($MontoAprobadoDet[$i])."',
+									FlagAnexa = '".$FlagAnexa[$i]."',
+									Estado = 'AP',
+									UltimoUsuario = '".$_SESSION["USUARIO_ACTUAL"]."',
+									UltimaFecha = NOW()";
+						execute($sql);
+					}
+				}
 				else
+				{
 					$sql = "UPDATE pv_proyectopresupuestodet
 							SET
 								MontoAprobado = '".setNumero($MontoAprobadoDet[$i])."',
@@ -238,7 +245,8 @@ if ($modulo == "formulario") {
 								CodProyPresupuesto = '".$CodProyPresupuesto."' AND
 								CodFuente = '".$CodFuente[$i]."' AND
 								cod_partida = '".$cod_partida[$i]."'";
-				execute($sql);
+					execute($sql);
+				}
 			}
 		}
 		//	presupuesto
@@ -266,7 +274,7 @@ if ($modulo == "formulario") {
 		$sql = "SELECT * FROM pv_proyectopresupuestodet WHERE CodOrganismo = '".$field['CodOrganismo']."' AND CodProyPresupuesto = '".$field['CodProyPresupuesto']."'";
 		$field_detalle = getRecords($sql);
 		foreach ($field_detalle as $f) {
-			if ($f['MontoAprobado']) {
+			if ($f['MontoAprobado'] > 0) {
 				$sql = "INSERT INTO pv_presupuestodet
 						SET
 							CodOrganismo = '".$f['CodOrganismo']."',
@@ -399,8 +407,6 @@ if ($modulo == "formulario") {
 		##	actualizar
 		$sql = "UPDATE pv_proyectopresupuesto
 				SET
-					MontoProyecto = 0,
-					MontoAprobado = 0,
 					Estado = '".$Estado."',
 					AnuladoPor = '".$_SESSION['CODPERSONA_ACTUAL']."',
 					FechaAnulado = NOW(),
@@ -413,8 +419,6 @@ if ($modulo == "formulario") {
 		##	detalle
 		$sql = "UPDATE pv_proyectopresupuestodet
 				SET
-					MontoPresupuestado = 0,
-					MontoAprobado = 0,
 					Estado = '".$Estado."',
 					UltimoUsuario = '".$_SESSION["USUARIO_ACTUAL"]."',
 					UltimaFecha = NOW()
@@ -597,6 +601,96 @@ elseif ($modulo == "ajax") {
 		echo $field_generica['cod_partida'].'|';
 		echo $field_partida['cod_partida'].'|';
 		echo $field_tipocuenta['cod_partida'];
+	}
+	//	resumen presupuestario
+	elseif($accion == "resumen_presupuestario") {
+		$Fuente = [];
+		$Partida = [];
+		for ($i=0; $i < count($CodFuente); $i++)
+		{
+			$MontoPresupuestado[$i] = setNumero($MontoPresupuestado[$i]);
+
+			if ($MontoPresupuestado[$i] > 0) 
+			{
+				$f = $CodFuente[$i];
+				$Fuente[$f] += $MontoPresupuestado[$i];
+
+				$p = $cod_partida[$i];
+				$Partida[$f][$p] += $MontoPresupuestado[$i];
+			}
+		}
+
+		foreach ($Fuente as $CodigoFuente => $MontoFuente)
+		{
+			?>
+			<tr class="trListaBody2">
+				<td colspan="2">
+					<?=$CodigoFuente?> - <?=getVar3("SELECT Denominacion FROM pv_fuentefinanciamiento WHERE CodFuente = '$CodigoFuente'")?>
+				</td>
+				<td align="right"><?=number_format($MontoFuente,2,',','.')?></td>
+			</tr>
+			<?php
+
+			foreach ($Partida[$CodigoFuente] as $CodigoPartida => $MontoPartida)
+			{
+				?>
+				<tr class="trListaBody">
+					<td align="center"><?=$CodigoPartida?></td>
+					<td>
+						<input type="text" value="<?=getVar3("SELECT denominacion FROM pv_partida WHERE cod_partida = '$CodigoPartida'")?>" class="cell2" readonly />
+						</td>
+					<td align="right"><?=number_format($MontoPartida,2,',','.')?></td>
+				</tr>
+				<?php
+			}
+		}
+		?>
+		<?php
+	}
+	//	resumen presupuestario aprobado
+	elseif($accion == "resumen_presupuestario_aprobado") {
+		$Fuente = [];
+		$Partida = [];
+		for ($i=0; $i < count($CodFuente); $i++)
+		{
+			$MontoAprobadoDet[$i] = setNumero($MontoAprobadoDet[$i]);
+
+			if ($MontoAprobadoDet[$i] > 0) 
+			{
+				$f = $CodFuente[$i];
+				$Fuente[$f] += $MontoAprobadoDet[$i];
+
+				$p = $cod_partida[$i];
+				$Partida[$f][$p] += $MontoAprobadoDet[$i];
+			}
+		}
+
+		foreach ($Fuente as $CodigoFuente => $MontoFuente)
+		{
+			?>
+			<tr class="trListaBody2">
+				<td colspan="2">
+					<?=$CodigoFuente?> - <?=getVar3("SELECT Denominacion FROM pv_fuentefinanciamiento WHERE CodFuente = '$CodigoFuente'")?>
+				</td>
+				<td align="right"><?=number_format($MontoFuente,2,',','.')?></td>
+			</tr>
+			<?php
+
+			foreach ($Partida[$CodigoFuente] as $CodigoPartida => $MontoPartida)
+			{
+				?>
+				<tr class="trListaBody">
+					<td align="center"><?=$CodigoPartida?></td>
+					<td>
+						<input type="text" value="<?=getVar3("SELECT denominacion FROM pv_partida WHERE cod_partida = '$CodigoPartida'")?>" class="cell2" readonly />
+						</td>
+					<td align="right"><?=number_format($MontoPartida,2,',','.')?></td>
+				</tr>
+				<?php
+			}
+		}
+		?>
+		<?php
 	}
 }
 ?>

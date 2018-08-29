@@ -30,6 +30,7 @@ if ($opcion == "nuevo") {
 	$disabled_modificar = "";
 	$disabled_ver = "";
 	$disabled_insertar = "";
+	$disabled_borrar = "";
 	$disabled_aprobar = "disabled";
 	$disabled_generar = "disabled";
 	$readonly_modificar = "";
@@ -172,7 +173,7 @@ elseif ($opcion == "modificar" || $opcion == "ver" || $opcion == "revisar" || $o
 			 	p.cod_tipocuenta = '4' AND
 			 	ppd.CodOrganismo = '$field[CodOrganismo]' AND
 			 	ppd.CodProyPresupuesto = '$field[CodProyPresupuesto]')
-			ORDER BY CodFuente, cod_partida";
+			ORDER BY cod_partida, CodFuente";
 	$field_partida = getRecords($sql);
 	##	modificar
 	if ($opcion == "modificar") {
@@ -181,6 +182,7 @@ elseif ($opcion == "modificar" || $opcion == "ver" || $opcion == "revisar" || $o
 		$disabled_modificar = "disabled";
 		$disabled_ver = "";
 		$disabled_insertar = "";
+		$disabled_borrar = "";
 		$disabled_aprobar = "disabled";
 		$disabled_generar = "disabled";
 		$readonly_modificar = "readonly";
@@ -198,6 +200,7 @@ elseif ($opcion == "modificar" || $opcion == "ver" || $opcion == "revisar" || $o
 		$disabled_modificar = "disabled";
 		$disabled_ver = "disabled";
 		$disabled_insertar = "disabled";
+		$disabled_borrar = "disabled";
 		$disabled_aprobar = "disabled";
 		$disabled_generar = "disabled";
 		$readonly_modificar = "readonly";
@@ -220,6 +223,7 @@ elseif ($opcion == "modificar" || $opcion == "ver" || $opcion == "revisar" || $o
 		$disabled_modificar = "disabled";
 		$disabled_ver = "disabled";
 		$disabled_insertar = "disabled";
+		$disabled_borrar = "disabled";
 		$disabled_aprobar = "disabled";
 		$disabled_generar = "disabled";
 		$readonly_modificar = "readonly";
@@ -242,6 +246,7 @@ elseif ($opcion == "modificar" || $opcion == "ver" || $opcion == "revisar" || $o
 		$disabled_modificar = "disabled";
 		$disabled_ver = "disabled";
 		$disabled_insertar = "disabled";
+		$disabled_borrar = "disabled";
 		$disabled_aprobar = "";
 		$disabled_generar = "disabled";
 		$readonly_modificar = "readonly";
@@ -265,6 +270,7 @@ elseif ($opcion == "modificar" || $opcion == "ver" || $opcion == "revisar" || $o
 		$disabled_modificar = "disabled";
 		$disabled_ver = "disabled";
 		$disabled_insertar = "";
+		$disabled_borrar = "disabled";
 		$disabled_aprobar = "disabled";
 		$disabled_generar = "";
 		$readonly_modificar = "readonly";
@@ -286,6 +292,7 @@ elseif ($opcion == "modificar" || $opcion == "ver" || $opcion == "revisar" || $o
 		$disabled_modificar = "disabled";
 		$disabled_ver = "disabled";
 		$disabled_insertar = "disabled";
+		$disabled_borrar = "disabled";
 		$disabled_aprobar = "disabled";
 		$disabled_generar = "disabled";
 		$readonly_modificar = "readonly";
@@ -618,8 +625,20 @@ $_width = 900;
             <div class="header">
 	            <ul id="tab">
 		            <!-- CSS Tabs -->
-		            <li id="li1" onclick="currentTab('tab', this);" class="current"><a href="#" onclick="mostrarTab('tab', 1, 2);">Informaci&oacute;n General</a></li>
-		            <li id="li2" onclick="currentTab('tab', this);"><a href="#" onclick="mostrarTab('tab', 2, 2);">Distribuci&oacute;n Presupuestaria</a></li>
+		            <li id="li1" onclick="currentTab('tab', this);" class="current">
+		            	<a href="#" onclick="mostrarTab('tab', 1, 4);">Información General</a>
+		            </li>
+		            <li id="li2" onclick="currentTab('tab', this);">
+		            	<a href="#" onclick="mostrarTab('tab', 2, 4);">Distribución Presupuestaria</a>
+		            </li>
+		            <li id="li3" onclick="currentTab('tab', this); resumen_presupuestario();">
+		            	<a href="#" onclick="mostrarTab('tab', 3, 4);">Resumen Presupuestario</a>
+		            </li>
+					<?php if ($field['Estado'] == 'GE') { ?>
+						<li id="li4" onclick="currentTab('tab', this); resumen_presupuestario_aprobado();">
+							<a href="#" onclick="mostrarTab('tab', 4, 4);">Resumen Presupuestario (Aprobado)</a>
+						</li>
+					<?php } ?>
 	            </ul>
             </div>
         </td>
@@ -846,7 +865,7 @@ $_width = 900;
 		        <td align="right" class="gallery clearfix">
 		            <a id="a_partida" href="../lib/listas/gehen.php?anz=lista_partidas&filtrar=default&ventana=proyectopresupuesto_insertar&detalle=partida&modulo=ajax&accion=partida_insertar&FlagTipoCuenta=S&fcod_tipocuenta=4&FlagGenerar=<?=($field['Estado']=='GE'?'S':'N')?>&iframe=true&width=950&height=430" rel="prettyPhoto[iframe2]" style="display:none;"></a>
 		            <input type="button" class="btLista" value="Insertar" onclick="$('#a_partida').click();" <?=$disabled_insertar?> />
-		            <input type="button" class="btLista" value="Borrar" onclick="quitar_partida(this, 'partida');" <?=$disabled_insertar?> />
+		            <input type="button" class="btLista" value="Borrar" onclick="quitar_partida(this, 'partida');" <?=$disabled_borrar?> />
 		        </td>
 		    </tr>
 		    </tbody>
@@ -932,6 +951,54 @@ $_width = 900;
 		</div>
 		<input type="hidden" id="nro_partida" value="<?=$nro_partida?>" />
 		<input type="hidden" id="can_partida" value="<?=$nro_partida?>" />
+	</div>
+
+	<div id="tab3" style="display:none;">
+		<table width="<?=$_width?>" class="tblBotones">
+			<thead>
+				<tr>
+					<th class="divFormCaption">Resumen Presupuetario</th>
+				</tr>
+			</thead>
+		</table>
+		<div style="overflow:scroll; height:400px; width:<?=$_width?>px; margin:auto;">
+			<table class="tblLista" style="width:100%;">
+				<thead>
+					<tr>
+						<th width="80">Partida</th>
+						<th align="left">Denominación</th>
+						<th width="150">Monto</th>
+					</tr>
+				</thead>
+				<tbody id="tabla_resumen">
+					
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<div id="tab4" style="display:none;">
+		<table width="<?=$_width?>" class="tblBotones">
+			<thead>
+				<tr>
+					<th class="divFormCaption">Resumen Presupuetario (Aprobado)</th>
+				</tr>
+			</thead>
+		</table>
+		<div style="overflow:scroll; height:400px; width:<?=$_width?>px; margin:auto;">
+			<table class="tblLista" style="width:100%;">
+				<thead>
+					<tr>
+						<th width="80">Partida</th>
+						<th align="left">Denominación</th>
+						<th width="150">Monto</th>
+					</tr>
+				</thead>
+				<tbody id="tabla_resumen_aprobado">
+					
+				</tbody>
+			</table>
+		</div>
 	</div>
 
 	<center>
@@ -1034,5 +1101,17 @@ $_width = 900;
 			$('.aprobado').val('0,00');
 		}
 		$('#MontoDiferencia').val(MontoDiferencia).formatCurrency();
+	}
+	function resumen_presupuestario() {
+		$('#tabla_resumen').html('Cargando resumen....');
+		$.post('pv_proyectopresupuesto_ajax.php', "modulo=ajax&accion=resumen_presupuestario&"+$('#frmentrada').serialize(), function(data) {
+			$('#tabla_resumen').html(data);
+	    });
+	}
+	function resumen_presupuestario_aprobado() {
+		$('#tabla_resumen').html('Cargando resumen....');
+		$.post('pv_proyectopresupuesto_ajax.php', "modulo=ajax&accion=resumen_presupuestario_aprobado&"+$('#frmentrada').serialize(), function(data) {
+			$('#tabla_resumen_aprobado').html(data);
+	    });
 	}
 </script>

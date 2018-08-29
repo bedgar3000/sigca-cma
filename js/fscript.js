@@ -61,7 +61,7 @@ function inicializar() {
 	}
 	if (typeof jQuery.fn.mask == 'function') {
 		$('.integer').mask("###0", {reverse: true, maxlength: false});
-		$('.documento').mask('Z000000000', {translation: {'Z': {pattern: /[0-9JGVEjgve]/, optional: true}}});
+		$('.documento').mask('Z000000000', {translation: {'Z': {pattern: /[0-9VEPGJCVvepgjcv]/, optional: true}}});
 		$('.ip_address').mask('0ZZ.0ZZ.0ZZ.0ZZ', {translation: {'Z': {pattern: /[0-9]/, optional: true}}});
 		$('.mac_address').mask('AA-AA-AA-AA-AA-AA');
 		$('.datepicker').mask('D0-M0-0000', {translation: {'D': {pattern: /[0-3]/}, 'M': {pattern: /[0-1]/} }} );
@@ -1721,14 +1721,14 @@ function pensiones_sobreviviente_empleados_sel(CodPersona) {
 //	------------------------------------------
 
 //	funcion para obtener el presupuesto segun el año
-function setPresupuesto(Organismo, Fecha, iCodPresupuesto, iAnio, CategoriaProg) {
+function setPresupuesto(Organismo, Fecha, iCodPresupuesto, iAnio) {
 	var EjercicioPpto = Fecha.substr(6, 4);
 	if (valFecha(Fecha)) {
 		iAnio.val(EjercicioPpto);
 		$.ajax({
 			type: "POST",
 			url: "../lib/fphp_funciones_ajax.php",
-			data: "accion=setPresupuesto&EjercicioPpto="+EjercicioPpto+"&Organismo="+Organismo+"&CategoriaProg="+CategoriaProg,
+			data: "accion=setPresupuesto&EjercicioPpto="+EjercicioPpto+"&Organismo="+Organismo,
 			async: false,
 			success: function(resp) {
 				iCodPresupuesto.val(resp);
