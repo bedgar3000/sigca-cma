@@ -11,7 +11,7 @@ if ($opcion == "nuevo") {
 	//	valores default
 	$field_orden['Estado'] = "PR";
 	$field_orden['CodOrganismo'] = $_SESSION["ORGANISMO_ACTUAL"];
-	$field_orden['CodCentroCosto'] = $_SESSION["CCOSTO_ACTUAL"];
+	$field_orden['CodCentroCosto'] = getVar3("SELECT CodCentroCosto FROM ac_mastcentrocosto WHERE Codigo = '$_PARAMETRO[CCOSTOCOMPRA]'");
 	$field_orden['PreparadaPor'] = $_SESSION["CODPERSONA_ACTUAL"];
 	$field_orden['NomPreparadaPor'] = $_SESSION["NOMBRE_USUARIO_ACTUAL"];
 	$field_orden['FechaPreparacion'] = substr($Ahora, 0, 10);
@@ -409,7 +409,7 @@ elseif ($opcion == "modificar" || $opcion == "ver" || $opcion == "revisar" || $o
             <td class="gallery clearfix">
                 <input type="text" name="Ejercicio" id="Ejercicio" value="<?=$field_orden['Ejercicio']?>" style="width:48px;" class="Ejercicio" readonly />
                 <input type="text" name="CodPresupuesto" id="CodPresupuesto" value="<?=$field_orden['CodPresupuesto']?>" style="width:48px;" class="CodPresupuesto" readonly />
-                <a href="../lib/listas/gehen.php?anz=lista_pv_presupuesto&filtrar=default&FlagCategoriaProg=S&fCodOrganismo=<?=$field_orden['CodOrganismo']?>&fEjercicio=<?=$field_orden['Ejercicio']?>&fCodDependencia=<?=$field_orden['CodDependencia']?>&campo1=Ejercicio&campo2=CodPresupuesto&campo3=CategoriaProg&ventana=lg_requerimiento&iframe=true&width=100%&height=425" rel="prettyPhoto[iframe4]" style=" <?=$display_ver?>" id="btPresupuesto">
+                <a href="../lib/listas/gehen.php?anz=lista_pv_presupuesto&filtrar=default&FlagCategoriaProg=S&fCodOrganismo=<?=$field_orden['CodOrganismo']?>&fEjercicio=<?=$field_orden['Ejercicio']?>&fCodDependencia=<?=$field_orden['CodDependencia']?>&campo1=Ejercicio&campo2=CodPresupuesto&campo3=CategoriaProg&ventana=lg_requerimiento&iframe=true&width=100%&height=425" rel="prettyPhoto[iframe5]" style=" <?=$display_ver?>" id="btPresupuesto">
                     <img src="../imagenes/f_boton.png" width="20" title="Seleccionar" align="absbottom" style="cursor:pointer;" />
                 </a>
             </td>
@@ -466,14 +466,14 @@ elseif ($opcion == "modificar" || $opcion == "ver" || $opcion == "revisar" || $o
 	<table width="1100" class="tblBotones">
 		<tr>
 	    	<td class="gallery clearfix">
-	            <a id="aSelCCosto" href="../lib/listas/listado_centro_costos.php?filtrar=default&cod=CodCentroCosto&nom=NomCentroCosto&ventana=selListadoLista&seldetalle=sel_detalles&filtroDependencia=S&iframe=true&width=1050&height=500" rel="prettyPhoto[iframe5]" style="display:none;"></a>
-	            <a id="aSelCategoriaProg" href="../lib/listas/gehen.php?anz=lista_pv_presupuesto&filtrar=default&FlagCategoriaProg=S&campo1=detallesCategoriaProg&campo2=detallesEjercicio&campo3=detallesCodPresupuesto&ventana=selListadoListaParentRequerimiento&seldetalle=sel_detalles&iframe=true&width=100%&height=400" rel="prettyPhoto[iframe11]" style="display:none;"></a>
+	            <a id="aSelCCosto" href="../lib/listas/listado_centro_costos.php?filtrar=default&cod=CodCentroCosto&nom=NomCentroCosto&ventana=selListadoLista&seldetalle=sel_detalles&filtroDependencia=S&iframe=true&width=1050&height=500" rel="prettyPhoto[iframe6]" style="display:none;"></a>
+	            <a id="aSelCategoriaProg" href="../lib/listas/gehen.php?anz=lista_pv_presupuesto&filtrar=default&FlagCategoriaProg=S&campo1=detallesCategoriaProg&campo2=detallesEjercicio&campo3=detallesCodPresupuesto&ventana=selListadoListaParentRequerimiento&seldetalle=sel_detalles&iframe=true&width=100%&height=400" rel="prettyPhoto[iframe7]" style="display:none;"></a>
 	            <input type="button" class="btLista" id="btSelCCosto" value="Sel. C.Costo" onclick="validarAbrirLista('sel_detalles', 'aSelCCosto');" <?=$disabled_ver?> />
 				<input type="button" style="width:90px;" id="btSelCategoriaProg" value="Sel. Presupuesto" onclick="validarAbrirLista('sel_detalles', 'aSelCategoriaProg');" <?=$disabled_ver?> />
 	        </td>
 			<td align="right" class="gallery clearfix">
-				<a id="aItem" href="../lib/listas/gehen.php?anz=lista_lg_items&filtrar=default&ventana=orden_compra_detalles_insertar&_APLICACION=LG&iframe=true&width=100%&height=100%" rel="prettyPhoto[iframe6]" style="display:none;"></a>
-	        	<a id="aCommodity" href="../lib/listas/listado_commodities.php?filtrar=default&ventana=orden_compra_detalles_insertar&PorClasificacion=S&Actualizar=S&iframe=true&width=100%&height=100%" rel="prettyPhoto[iframe7]" style="display:none;"></a>
+				<a id="aItem" href="../lib/listas/gehen.php?anz=lista_lg_items&filtrar=default&ventana=orden_compra_detalles_insertar&_APLICACION=LG&iframe=true&width=100%&height=100%" rel="prettyPhoto[iframe8]" style="display:none;"></a>
+	        	<a id="aCommodity" href="../lib/listas/listado_commodities.php?filtrar=default&ventana=orden_compra_detalles_insertar&PorClasificacion=S&Actualizar=S&iframe=true&width=100%&height=100%" rel="prettyPhoto[iframe9]" style="display:none;"></a>
 				<input type="button" class="btLista" value="Item" id="btItem" onclick="document.getElementById('aItem').click();" <?=$disabled_item?> />
 				<input type="button" class="btLista" value="Commodity" id="btCommodity" onclick="document.getElementById('aCommodity').click();" <?=$disabled_commodity?> />
 				<input type="button" class="btLista" value="Borrar" onclick="quitarLineaOrdenCompra(this, 'detalles', this.form);" <?=$disabled_ver?> />
@@ -512,129 +512,129 @@ elseif ($opcion == "modificar" || $opcion == "ver" || $opcion == "revisar" || $o
 	    </thead>
 	    
 	    <tbody id="lista_detalles">
-		    <?php
-			$nrodetalles = 0;
-			$sql = "SELECT
-						ocd.*,
-						pv.CategoriaProg,
-						cc.Codigo AS NomCentroCosto
-					FROM
-						lg_ordencompradetalle ocd
-						LEFT JOIN pv_presupuesto pv ON (pv.CodOrganismo = ocd.CodOrganismo AND pv.CodPresupuesto = ocd.CodPresupuesto)
-						LEFT JOIN ac_mastcentrocosto cc ON (cc.CodCentroCosto = ocd.CodCentroCosto)
-					WHERE
-						ocd.Anio = '".$Anio."' AND
-						ocd.CodOrganismo = '".$CodOrganismo."' AND
-						ocd.NroOrden = '".$NroOrden."'
-					ORDER BY Secuencia";
-			$query_detalles = mysql_query($sql) or die(getErrorSql(mysql_errno(), mysql_error(), $sql));
-			while ($field_detalles = mysql_fetch_array($query_detalles)) {
-				$nrodetalles++;
-				if ($field_detalles['CodItem'] != "") {
-					$disabled_descripcion = "readonly";
-					$Codigo = $field_detalles['CodItem'];
-					$CommoditySub = "";
-				} else {
-					$disabled_descripcion = "";
-					$CodItem = "";
-					$Codigo = $field_detalles['CommoditySub'];
-				}
-				$disabled_descripcion = $disabled_ver;
-				$PrecioUnitTotal = $field_detalles['PrecioUnit'] - $field_detalles['DescuentoFijo'] - ($field_detalles['PrecioUnit'] * $field_detalles['DescuentoPorcentaje'] / 100);
-				$PrecioUnitTotal = $PrecioUnitTotal + ($PrecioUnitTotal * $FactorImpuesto / 100);
-				?>
-				<tr class="trListaBody" onclick="mClk(this, 'sel_detalles');" id="detalles_<?=$nrodetalles?>">
-					<th align="center">
-						<?=$nrodetalles?>
-		            </th>
-					<td align="center">
-		            	<?=$Codigo?>
-		                <input type="hidden" name="CodItem" class="cell2" style="text-align:center;" value="<?=$field_detalles['CodItem']?>" readonly />
-		                <input type="hidden" name="CommoditySub" class="cell2" style="text-align:center;" value="<?=$field_detalles['CommoditySub']?>" readonly />
-		            </td>
-					<td align="center">
-						<textarea name="Descripcion" style="height:30px;" class="cell" <?=$disabled_descripcion?>><?=($field_detalles['Descripcion'])?></textarea>
-					</td>
-					<td align="center">
-						<select name="CodUnidad" class="cell" <?=$disabled_ver?>>
-							<?=loadSelect2('mastunidades','CodUnidad','CodUnidad',$field_detalles['CodUnidad'])?>
-						</select>
-		            </td>
-					<td align="center">
-		            	<input type="text" name="CantidadPedida" class="cell" style="text-align:right;" value="<?=number_format($field_detalles['CantidadPedida'], 2, ',', '.')?>" onBlur="numeroBlur(this);" onFocus="numeroFocus(this);" onchange="setMontosOrdenCompra(this.form);" <?=$disabled_ver?> />
-		            </td>
-					<td align="center">
-		            	<input type="text" name="PrecioUnit" class="cell" style="text-align:right;" value="<?=number_format($field_detalles['PrecioUnit'], 2, ',', '.')?>" onBlur="numeroBlur(this);" onFocus="numeroFocus(this);" onchange="setMontosOrdenCompra(this.form);" <?=$disabled_ver?> />
-		            </td>
-					<td align="center">
-		            	<input type="text" name="DescuentoPorcentaje" class="cell" style="text-align:right;" value="<?=number_format($field_detalles['DescuentoPorcentaje'], 2, ',', '.')?>" onBlur="numeroBlur(this);" onFocus="numeroFocus(this);" onchange="setMontosOrdenCompra(this.form);" <?=$disabled_ver?> />
-		            </td>
-					<td align="center">
-		            	<input type="text" name="DescuentoFijo" class="cell" style="text-align:right;" value="<?=number_format($field_detalles['DescuentoFijo'], 2, ',', '.')?>" onBlur="numeroBlur(this);" onFocus="numeroFocus(this);" onchange="setMontosOrdenCompra(this.form);" <?=$disabled_ver?> />
-		            </td>
-					<td align="center">
-		            	<input type="checkbox" name="FlagExonerado" class="FlagExonerado" onchange="setMontosOrdenCompra(this.form);" <?=chkFlag($field_detalles['FlagExonerado'])?> <?=$disabled_ver?> <?=$dFlagExonerado?> />
-		            </td>
-					<td align="center">
-		            	<input type="text" name="PrecioUnitTotal" class="cell2" style="text-align:right;" value="<?=number_format($PrecioUnitTotal, 2, ',', '.')?>" readonly="readonly" <?=$disabled_ver?> />
-		            </td>
-					<td align="center">
-		            	<input type="text" name="Total" class="cell2" style="text-align:right;" value="<?=number_format($field_detalles['Total'], 2, ',', '.')?>" readonly="readonly" <?=$disabled_ver?> />
-		            </td>
-	                <td align="center">
-	                    <input type="text" name="detallesCategoriaProg" id="detallesCategoriaProg_<?=$nrodetalles?>" class="cell2 CategoriaProg" style="text-align:center;" value="<?=$field_detalles['CategoriaProg']?>" readonly />
-	                    <input type="hidden" name="detallesEjercicio" id="detallesEjercicio_<?=$nrodetalles?>" class="cell2 Ejercicio" style="text-align:center;" value="<?=$field_detalles['Ejercicio']?>" readonly />
-	                    <input type="hidden" name="detallesCodPresupuesto" id="detallesCodPresupuesto_<?=$nrodetalles?>" class="cell2 CodPresupuesto" style="text-align:center;" value="<?=$field_detalles['CodPresupuesto']?>" readonly />
-	                </td>
-	                <td>
-	                    <select name="detallesCodFuente" id="detallesCodFuente_<?=$nrodetalles?>" class="cell2 CodFuente" <?=$disabled_ver?>>
-	                        <?=loadSelect2("pv_fuentefinanciamiento","CodFuente","Denominacion",$field_detalles['CodFuente'],11)?>
-	                    </select>
-	                </td>
-					<td align="center">
-		            	<select name="CodUnidadRec" class="cell" <?=$disabled_ver?>>
-		                	<?=loadSelect2("mastunidades", "CodUnidad", "CodUnidad", $field_detalles['CodUnidadRec'], 0)?>
-		                </select>
-		            </td>
-					<td align="center">
-		            	<input type="text" name="CantidadRec" class="cell" style="text-align:right;" value="<?=number_format($field_detalles['CantidadRec'], 2, ',', '.')?>" onBlur="numeroBlur(this);" onFocus="numeroFocus(this);" <?=$disabled_ver?> />
-		            </td>
-					<td align="center">
-		            	<input type="text" name="FechaPrometida" value="<?=formatFechaDMA($field_detalles['FechaPrometida'])?>" maxlength="10" style="text-align:center;" class="datepicker cell" onkeyup="setFechaDMA(this);" <?=$disabled_ver?> />
-		            </td>
-					<td align="right">
-						<?=number_format($field_detalles['CantidadRecibida'], 2, ',', '.')?>
-					</td>
-	    			<td align="center">
-	                    <input type="text" name="NomCentroCosto" id="NomCentroCosto_<?=$nrodetalles?>" class="cell2" style="text-align:center;" maxlength="4" value="<?=$field_detalles['NomCentroCosto']?>" readonly />
-	    				<input type="hidden" name="CodCentroCosto" id="CodCentroCosto_<?=$nrodetalles?>" value="<?=$field_detalles['CodCentroCosto']?>" />
-	    			</td>
-					<td align="center">
-						<?=printValoresGeneral("ESTADO-COMPRA-DETALLE", $field_detalles['Estado'])?>
-		            </td>
-					<td align="center">
-						<?=$field_detalles['cod_partida']?>
-						<input type="hidden" name="cod_partida" value="<?=$field_detalles['cod_partida']?>" />
-					</td>
-					<td align="center">
-						<?=$field_detalles['CodCuenta']?>
-						<input type="hidden" name="CodCuenta" value="<?=$field_detalles['CodCuenta']?>" />
-					</td>
-					<td align="center">
-						<?=$field_detalles['CodCuentaPub20']?>
-						<input type="hidden" name="CodCuentaPub20" value="<?=$field_detalles['CodCuentaPub20']?>" />
-					</td>
-					<td align="center">
-						<textarea name="Comentarios" style="height:30px;" class="cell" <?=$disabled_ver?>><?=htmlentities($field_detalles['Comentarios'])?></textarea>
-						<input type="hidden" name="CodRequerimiento" />
-						<input type="hidden" name="Secuencia" />
-						<input type="hidden" name="CotizacionSecuencia" />
-						<input type="hidden" name="CantidadRequerimiento" />
-					</td>
-				</tr>
-				<?php
+	    <?php
+		$nrodetalles = 0;
+		$sql = "SELECT
+					ocd.*,
+					pv.CategoriaProg,
+					cc.Codigo AS NomCentroCosto
+				FROM
+					lg_ordencompradetalle ocd
+					LEFT JOIN pv_presupuesto pv ON (pv.CodOrganismo = ocd.CodOrganismo AND pv.CodPresupuesto = ocd.CodPresupuesto)
+					LEFT JOIN ac_mastcentrocosto cc ON (cc.CodCentroCosto = ocd.CodCentroCosto)
+				WHERE
+					ocd.Anio = '".$Anio."' AND
+					ocd.CodOrganismo = '".$CodOrganismo."' AND
+					ocd.NroOrden = '".$NroOrden."'
+				ORDER BY Secuencia";
+		$query_detalles = mysql_query($sql) or die(getErrorSql(mysql_errno(), mysql_error(), $sql));
+		while ($field_detalles = mysql_fetch_array($query_detalles)) {
+			$nrodetalles++;
+			if ($field_detalles['CodItem'] != "") {
+				$disabled_descripcion = "readonly";
+				$Codigo = $field_detalles['CodItem'];
+				$CommoditySub = "";
+			} else {
+				$disabled_descripcion = "";
+				$CodItem = "";
+				$Codigo = $field_detalles['CommoditySub'];
 			}
+			$disabled_descripcion = $disabled_ver;
+			$PrecioUnitTotal = $field_detalles['PrecioUnit'] - $field_detalles['DescuentoFijo'] - ($field_detalles['PrecioUnit'] * $field_detalles['DescuentoPorcentaje'] / 100);
+			$PrecioUnitTotal = $PrecioUnitTotal + ($PrecioUnitTotal * $FactorImpuesto / 100);
 			?>
+			<tr class="trListaBody" onclick="mClk(this, 'sel_detalles');" id="detalles_<?=$nrodetalles?>">
+				<th align="center">
+					<?=$nrodetalles?>
+	            </th>
+				<td align="center">
+	            	<?=$Codigo?>
+	                <input type="hidden" name="CodItem" class="cell2" style="text-align:center;" value="<?=$field_detalles['CodItem']?>" readonly />
+	                <input type="hidden" name="CommoditySub" class="cell2" style="text-align:center;" value="<?=$field_detalles['CommoditySub']?>" readonly />
+	            </td>
+				<td align="center">
+					<textarea name="Descripcion" style="height:30px;" class="cell" <?=$disabled_descripcion?>><?=($field_detalles['Descripcion'])?></textarea>
+				</td>
+				<td align="center">
+					<select name="CodUnidad" class="cell" <?=$disabled_ver?>>
+						<?=loadSelect2('mastunidades','CodUnidad','CodUnidad',$field_detalles['CodUnidad'])?>
+					</select>
+	            </td>
+				<td align="center">
+	            	<input type="text" name="CantidadPedida" class="cell" style="text-align:right;" value="<?=number_format($field_detalles['CantidadPedida'], 2, ',', '.')?>" onBlur="numeroBlur(this);" onFocus="numeroFocus(this);" onchange="setMontosOrdenCompra(this.form);" <?=$disabled_ver?> />
+	            </td>
+				<td align="center">
+	            	<input type="text" name="PrecioUnit" class="cell" style="text-align:right;" value="<?=number_format($field_detalles['PrecioUnit'], 2, ',', '.')?>" onBlur="numeroBlur(this);" onFocus="numeroFocus(this);" onchange="setMontosOrdenCompra(this.form);" <?=$disabled_ver?> />
+	            </td>
+				<td align="center">
+	            	<input type="text" name="DescuentoPorcentaje" class="cell" style="text-align:right;" value="<?=number_format($field_detalles['DescuentoPorcentaje'], 2, ',', '.')?>" onBlur="numeroBlur(this);" onFocus="numeroFocus(this);" onchange="setMontosOrdenCompra(this.form);" <?=$disabled_ver?> />
+	            </td>
+				<td align="center">
+	            	<input type="text" name="DescuentoFijo" class="cell" style="text-align:right;" value="<?=number_format($field_detalles['DescuentoFijo'], 2, ',', '.')?>" onBlur="numeroBlur(this);" onFocus="numeroFocus(this);" onchange="setMontosOrdenCompra(this.form);" <?=$disabled_ver?> />
+	            </td>
+				<td align="center">
+	            	<input type="checkbox" name="FlagExonerado" class="FlagExonerado" onchange="setMontosOrdenCompra(this.form);" <?=chkFlag($field_detalles['FlagExonerado'])?> <?=$disabled_ver?> <?=$dFlagExonerado?> />
+	            </td>
+				<td align="center">
+	            	<input type="text" name="PrecioUnitTotal" class="cell2" style="text-align:right;" value="<?=number_format($PrecioUnitTotal, 2, ',', '.')?>" readonly="readonly" <?=$disabled_ver?> />
+	            </td>
+				<td align="center">
+	            	<input type="text" name="Total" class="cell2" style="text-align:right;" value="<?=number_format($field_detalles['Total'], 2, ',', '.')?>" readonly="readonly" <?=$disabled_ver?> />
+	            </td>
+                <td align="center">
+                    <input type="text" name="detallesCategoriaProg" id="detallesCategoriaProg_<?=$nrodetalles?>" class="cell2 CategoriaProg" style="text-align:center;" value="<?=$field_detalles['CategoriaProg']?>" readonly />
+                    <input type="hidden" name="detallesEjercicio" id="detallesEjercicio_<?=$nrodetalles?>" class="cell2 Ejercicio" style="text-align:center;" value="<?=$field_detalles['Ejercicio']?>" readonly />
+                    <input type="hidden" name="detallesCodPresupuesto" id="detallesCodPresupuesto_<?=$nrodetalles?>" class="cell2 CodPresupuesto" style="text-align:center;" value="<?=$field_detalles['CodPresupuesto']?>" readonly />
+                </td>
+                <td>
+                    <select name="detallesCodFuente" id="detallesCodFuente_<?=$nrodetalles?>" class="cell2 CodFuente" <?=$disabled_ver?>>
+                        <?=loadSelect2("pv_fuentefinanciamiento","CodFuente","Denominacion",$field_detalles['CodFuente'],11)?>
+                    </select>
+                </td>
+				<td align="center">
+	            	<select name="CodUnidadRec" class="cell" <?=$disabled_ver?>>
+	                	<?=loadSelect2("mastunidades", "CodUnidad", "CodUnidad", $field_detalles['CodUnidadRec'], 0)?>
+	                </select>
+	            </td>
+				<td align="center">
+	            	<input type="text" name="CantidadRec" class="cell" style="text-align:right;" value="<?=number_format($field_detalles['CantidadRec'], 2, ',', '.')?>" onBlur="numeroBlur(this);" onFocus="numeroFocus(this);" <?=$disabled_ver?> />
+	            </td>
+				<td align="center">
+	            	<input type="text" name="FechaPrometida" value="<?=formatFechaDMA($field_detalles['FechaPrometida'])?>" maxlength="10" style="text-align:center;" class="datepicker cell" onkeyup="setFechaDMA(this);" <?=$disabled_ver?> />
+	            </td>
+				<td align="right">
+					<?=number_format($field_detalles['CantidadRecibida'], 2, ',', '.')?>
+				</td>
+    			<td align="center">
+                    <input type="text" name="NomCentroCosto" id="NomCentroCosto_<?=$nrodetalles?>" class="cell2" style="text-align:center;" maxlength="4" value="<?=$field_detalles['NomCentroCosto']?>" readonly />
+    				<input type="hidden" name="CodCentroCosto" id="CodCentroCosto_<?=$nrodetalles?>" value="<?=$field_detalles['CodCentroCosto']?>" />
+    			</td>
+				<td align="center">
+					<?=printValoresGeneral("ESTADO-COMPRA-DETALLE", $field_detalles['Estado'])?>
+	            </td>
+				<td align="center">
+					<?=$field_detalles['cod_partida']?>
+					<input type="hidden" name="cod_partida" value="<?=$field_detalles['cod_partida']?>" />
+				</td>
+				<td align="center">
+					<?=$field_detalles['CodCuenta']?>
+					<input type="hidden" name="CodCuenta" value="<?=$field_detalles['CodCuenta']?>" />
+				</td>
+				<td align="center">
+					<?=$field_detalles['CodCuentaPub20']?>
+					<input type="hidden" name="CodCuentaPub20" value="<?=$field_detalles['CodCuentaPub20']?>" />
+				</td>
+				<td align="center">
+					<textarea name="Comentarios" style="height:30px;" class="cell" <?=$disabled_ver?>><?=htmlentities($field_detalles['Comentarios'])?></textarea>
+					<input type="hidden" name="CodRequerimiento" />
+					<input type="hidden" name="Secuencia" />
+					<input type="hidden" name="CotizacionSecuencia" />
+					<input type="hidden" name="CantidadRequerimiento" />
+				</td>
+			</tr>
+			<?php
+		}
+		?>
 	    </tbody>
 	</table>
 	</div>
@@ -1047,7 +1047,7 @@ elseif ($opcion == "modificar" || $opcion == "ver" || $opcion == "revisar" || $o
 	    	<td width="35"><div style="background-color:#FFC; width:25px; height:20px;"></div></td>
 	        <td>Disponibilidad presupuestaria (Tiene ordenes pendientes)</td>
 			<td align="right" class="gallery clearfix">
-	        	<a id="a_disponibilidad" href="pagina.php?iframe=true" rel="prettyPhoto[iframe8]" style="display:none;"></a>
+	        	<a id="a_disponibilidad" href="pagina.php?iframe=true" rel="prettyPhoto[iframe11]" style="display:none;"></a>
 				<input type="button" value="Disponibilidad Presupuestaria" onclick="verDisponibilidadPresupuestaria();" />
 			</td>
 		</tr>
