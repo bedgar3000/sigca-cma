@@ -191,6 +191,9 @@ $_width = 900;
 			    
 			    <tbody>
 				<?php
+				if ($ventana == "ap_gastoadelanto") {
+					$filtro_oc .= " AND (ga.CodAdelanto IS NULL)";
+				}
 				//	consulto lista
 				$sql = "SELECT
 							oc.Anio,
@@ -215,8 +218,10 @@ $_width = 900;
 							a1.Descripcion AS NomAlmacen,
 							a2.Descripcion AS NomAlmacenIngreso,
 							fp.Descripcion AS NomFormaPago,
+							pr.CodTipoPago,
 							i.FactorPorcentaje
 						FROM lg_ordencompra oc
+						LEFT JOIN mastproveedores pr ON pr.CodProveedor = oc.CodProveedor
 						INNER JOIN lg_almacenmast a1 ON oc.CodAlmacen = a1.Codalmacen
 						LEFT JOIN lg_almacenmast a2 ON oc.CodAlmacenIngreso = a2.Codalmacen
 						LEFT JOIN mastformapago fp ON oc.CodFormaPago = fp.CodFormaPago
@@ -226,6 +231,13 @@ $_width = 900;
 							i.CodImpuesto = tsi.CodImpuesto
 							AND i.CodRegimenFiscal = 'I'
 						)
+						LEFT JOIN ap_gastoadelanto ga ON (
+							ga.Anio = oc.Anio 
+							AND ga.CodOrganismo = oc.CodOrganismo 
+							AND ga.NroOrden = oc.NroOrden
+							AND ga.TipoCompromiso = 'OC'
+							AND ga.Estado <> 'AN'
+						) 
 						WHERE 1 $filtro_oc
 						ORDER BY Anio, CodOrganismo, NroInterno";
 				$field = getRecords($sql);
@@ -254,11 +266,13 @@ $_width = 900;
 				            	'<?=$f['CodTipoServicio']?>',
 				            	'<?=number_format($f['MontoAfecto'],2,',','.')?>',
 				            	'<?=number_format($f['MontoNoAfecto'],2,',','.')?>',
-				            	'<?=number_format($f['FactorPorcentaje'],2,',','.')?>',
+				            	'<?=$f['FactorPorcentaje']?>',
 				            	'<?=number_format($f['MontoIGV'],2,',','.')?>',
 				            	'0,00',
 				            	'<?=number_format($f['MontoTotal'],2,',','.')?>',
 				            	'<?=number_format($f['MontoTotal'],2,',','.')?>',
+				            	'<?=htmlentities($f['Observaciones'])?>',
+				            	'<?=$f['CodTipoPago']?>',
 				            ],
 			            	[
 				            	'Anio',
@@ -274,6 +288,8 @@ $_width = 900;
 				            	'MontoRetenciones',
 				            	'MontoTotal',
 				            	'SaldoAdelanto',
+				            	'Descripcion',
+				            	'CodTipoPago',
 			            	]);">
 			            <?php
 					}
@@ -326,11 +342,9 @@ $_width = 900;
 			    
 			    <tbody>
 				<?php
-				//	consulto todos
-				$sql = "SELECT *
-						FROM lg_ordenservicio os
-						WHERE 1 $filtro_os";
-				$rows_total = getNumRows3($sql);
+				if ($ventana == "ap_gastoadelanto") {
+					$filtro_os .= " AND (ga.CodAdelanto IS NULL)";
+				}
 				//	consulto lista
 				$sql = "SELECT
 							os.Anio,
@@ -343,10 +357,15 @@ $_width = 900;
 							os.FechaPreparacion,
 							os.FechaDocumento,
 							os.NomProveedor,
+							os.MontoOriginal,
+							os.MontoNoAfecto,
+							os.MontoIva,
 							os.TotalMontoIva,
 							os.Estado,
 							os.NroInterno,
 							os.FechaAnulacion,
+							os.CodTipoServicio,
+							os.CodTipoPago,
 							i.FactorPorcentaje
 						FROM lg_ordenservicio os
 						LEFT JOIN masttiposervicio ts ON ts.CodTipoServicio = os.CodTipoServicio
@@ -354,6 +373,13 @@ $_width = 900;
 						LEFT JOIN mastimpuestos i ON (
 							i.CodImpuesto = tsi.CodImpuesto
 							AND i.CodRegimenFiscal = 'I'
+						)
+						LEFT JOIN ap_gastoadelanto ga ON (
+							ga.Anio = os.Anio 
+							AND ga.CodOrganismo = os.CodOrganismo 
+							AND ga.NroOrden = os.NroOrden
+							AND ga.TipoCompromiso = 'OS'
+							AND ga.Estado <> 'AN'
 						)
 						WHERE 1 $filtro_os
 						ORDER BY Anio, CodOrganismo, NroInterno";
@@ -383,12 +409,13 @@ $_width = 900;
 				            	'<?=$f['CodTipoServicio']?>',
 				            	'<?=number_format($f['MontoOriginal'],2,',','.')?>',
 				            	'<?=number_format($f['MontoNoAfecto'],2,',','.')?>',
-				            	'<?=number_format($f['FactorPorcentaje'],2,',','.')?>',
+				            	'<?=$f['FactorPorcentaje']?>',
 				            	'<?=number_format($f['MontoIva'],2,',','.')?>',
 				            	'0,00',
 				            	'<?=number_format($f['TotalMontoIva'],2,',','.')?>',
 				            	'<?=number_format($f['TotalMontoIva'],2,',','.')?>',
 				            	'<?=$f['CodTipoPago']?>',
+								'<?=htmlentities($f['Descripcion'])?>',
 				            ],
 			            	[
 				            	'Anio',
@@ -405,6 +432,7 @@ $_width = 900;
 				            	'MontoTotal',
 				            	'SaldoAdelanto',
 				            	'CodTipoPago',
+				            	'Descripcion',
 			            	]);">
 			            <?php
 					}
