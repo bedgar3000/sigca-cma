@@ -1,7 +1,7 @@
 <?php
 include("../lib/fphp.php");
 include("lib/fphp.php");
-	$__archivo = fopen("_"."$modulo-$accion".".sql", "w+");
+//	$__archivo = fopen("_"."$modulo-$accion".".sql", "w+");
 ///////////////////////////////////////////////////////////////////////////////
 //	ORDEN DE COMPRA (NUEVO, MODIFICAR, REVISAR, APROBAR, ANULAR, CERRAR, CERRAR LINEAS)
 ///////////////////////////////////////////////////////////////////////////////
@@ -60,6 +60,7 @@ if ($modulo == "orden_compra") {
 					CodPresupuesto = '".$CodPresupuesto."',
 					Ejercicio = '".$Ejercicio."',
 					CodFuente = '".$CodFuente."',
+					FactorImpuesto = '".$FactorImpuesto."',
 					Estado = '".$Estado."',
 					UltimoUsuario = '".$_SESSION["USUARIO_ACTUAL"]."',
 					UltimaFecha = NOW()";
@@ -365,6 +366,7 @@ if ($modulo == "orden_compra") {
 					CodCuentaPub20 = '".$CodCuentaPub20."',
 					cod_partida = '".$cod_partida."',
 					CodPresupuesto = '".$CodPresupuesto."',
+					FactorImpuesto = '".$FactorImpuesto."',
 					UltimoUsuario = '".$_SESSION["USUARIO_ACTUAL"]."',
 					UltimaFecha = NOW()
 				WHERE
